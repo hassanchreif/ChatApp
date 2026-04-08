@@ -1,4 +1,5 @@
 using ChatApp.API.Data;
+using ChatApp.API.Hubs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -13,6 +14,19 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // ✅ Add Controllers
 builder.Services.AddControllers();
+
+// ✅ Add CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowReactApp",
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod()
+                  .AllowCredentials();
+        });
+});
 
 // ✅ Configure JWT Authentication
 var jwtSettings = builder.Configuration.GetSection("Jwt");
@@ -34,6 +48,23 @@ builder.Services.AddAuthentication(options =>
         ValidAudience = jwtSettings["Audience"],
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ClockSkew = TimeSpan.Zero
+    };
+
+    // ✅ Allow SignalR to read access token from query string
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            // If the request is for our hub...
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/chathub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -66,7 +97,13 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
+// ✅ Add SignalR
+builder.Services.AddSignalR();
+
 var app = builder.Build();
+
+// ✅ Enable CORS
+app.UseCors("AllowReactApp");
 
 // ✅ Enable Middleware
 if (app.Environment.IsDevelopment())
@@ -83,6 +120,9 @@ app.UseAuthorization();
 
 // ✅ Map Controllers
 app.MapControllers();
+
+// ✅ Map SignalR Hubs
+app.MapHub<ChatHub>("/chathub");
 
 // Optional test endpoint
 app.MapGet("/weatherforecast", () => "test");
