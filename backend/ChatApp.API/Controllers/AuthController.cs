@@ -70,7 +70,7 @@ namespace ChatApp.API.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var jwtToken = tokenHandler.WriteToken(token);
 
-            return Ok(new { token = jwtToken });
+            return Ok(new { token = jwtToken, username = dbUser.Username, email = dbUser.Email });
         }
     }
 }

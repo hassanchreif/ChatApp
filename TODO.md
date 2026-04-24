@@ -1,0 +1,21 @@
+# Frontend Full Redesign (Green/Blue/White)
+
+- [x] Analyze issue and create plan
+- [x] Update `frontend/src/api/axios.js` — HTTP instead of HTTPS for localhost:5135
+- [x] Update `frontend/src/services/signalr.js` — HTTP instead of HTTPS for localhost:5135
+- [x] Update `backend/ChatApp.API/Program.cs` — make UseHttpsRedirection conditional
+- [x] Update `backend/ChatApp.API/Program.cs` — add Vite dev port 5173 to CORS
+- [x] Verify SSL fix changes
+- [x] Update `frontend/index.html` — title to ChatApp
+- [x] Rewrite `frontend/src/index.css` — imports `styles/global.css`
+- [x] Create `frontend/src/styles/global.css` — theme, buttons, inputs, cards, shared utilities
+- [x] Create `frontend/src/styles/App.css` — header & navigation styles
+- [x] Create `frontend/src/styles/Auth.css` — Login & Register page styles
+- [x] Create `frontend/src/styles/Rooms.css` — Rooms page styles
+- [x] Create `frontend/src/styles/Chat.css` — Chat page & message bubble styles
+- [x] Update `frontend/src/App.jsx` — layout wrapper, header, navigation
+- [x] Redesign `frontend/src/pages/Login.jsx` — modern auth card
+- [x] Build `frontend/src/pages/Register.jsx` — full registration page
+- [x] Redesign `frontend/src/pages/Rooms.jsx` — room cards grid
+- [x] Redesign `frontend/src/pages/Chat.jsx` — message bubbles, modern chat
+- [x] Update `frontend/src/components/ChatBox.jsx` — message bubble component

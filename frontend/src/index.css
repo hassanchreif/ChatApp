@@ -1,0 +1,3 @@
+/* Theme entry point — imports the global design system */
+@import url('./styles/global.css');
+
